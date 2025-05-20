@@ -1,70 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:workwave/ui/onboarding/widgets/custom_button.dart';
+import 'package:workwave/core/theme/colors/app_colors.dart';
+import 'package:workwave/resources/resources.dart';
+import 'package:workwave/widgets/custom_button.dart';
 
 class FirstOnboardingScreen extends StatelessWidget {
   final PageController pageController;
   const FirstOnboardingScreen({super.key, required this.pageController});
 
-  void nextNavigate() {
-    pageController.animateToPage(
-      1, 
-      duration: const Duration(milliseconds: 500), 
-      curve: Curves.easeInOut,
-    );
-  } 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
 
-          // ==========
-
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: _HeaderWidget(),
-            )
+          // ========== Фоновое изображение с градиентом ==========
+          Positioned.fill(
+            child: Stack(
+              children: [
+                Image.asset(
+                  AppImages.image1,
+                  fit: BoxFit.cover,
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black87,
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
 
-
-
-          // ========== Next Button ========== //
+          // ========== Контент ==========
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: CustomButton(title: 'Далее', onTap: nextNavigate, ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Spacer(),
+                const Text(
+                  'Найди себя вместе с \nWork Wave',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Твой первый шаг в мир профессий. Находи стажировки, вакансии и запускай карьеру уже во время учёбы.',
+                  style: TextStyle(
+                    color: AppColors.silver,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  title: 'Далее',
+                  onTap: () {
+                    pageController.animateToPage(
+                      1,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-
         ],
       ),
     );
   }
 }
-
-
-
-
-class _HeaderWidget extends StatelessWidget {
-  const _HeaderWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          Text(
-            'First',
-          )
-        ],
-      ),
-    );
-  }
-}
-
-
-
-
-

@@ -1,6 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:workwave/core/route/app_routes.dart';
 import 'package:workwave/data/places_data.dart';
+import 'package:workwave/ui/auth/login/login_screen.dart';
+import 'package:workwave/ui/auth/registration/registration_screen.dart';
+import 'package:workwave/ui/loading_screen/loading_screen.dart';
 import 'package:workwave/ui/main_screens/chat/chat_screen.dart';
 import 'package:workwave/ui/main_screens/home/home_screen.dart';
 import 'package:workwave/ui/main_screens/main_screens.dart';
@@ -18,6 +21,21 @@ class AppRouter {
         builder:(context, state) => OnboardingScreen(),
       ),
 
+      GoRoute(
+        path: AppRoutes.loading,
+        builder:(context, state) => LoadingScreen(),
+      ),
+
+
+      GoRoute(
+        path: AppRoutes.login,
+        builder: (context, state) => LoginScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.registration,
+        builder:(context, state) => RegistrationScreen(),
+      ),
 
 
       ShellRoute(

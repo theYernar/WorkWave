@@ -33,7 +33,8 @@ class VacanciesScreen extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 228, 232, 235),
+                          color: Colors.white,
+                          border: Border.all(color: AppColors.borderColor),
                           borderRadius: BorderRadius.circular(14)
                         ),
 
