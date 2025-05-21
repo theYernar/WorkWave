@@ -9,6 +9,7 @@ class ContactData{
 }
 
 class VacanciesData {
+  final int id;
   final String title;
   final String salary;
   final String description;
@@ -16,6 +17,7 @@ class VacanciesData {
   final DateTime postedDate;
 
   VacanciesData({
+    required this.id,
     required this.title,
     required this.salary,
     required this.description,

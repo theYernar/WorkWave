@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:workwave/core/theme/colors/app_colors.dart';
+import 'package:workwave/data/user_role.dart';
 
 class StudentProfile extends StatelessWidget {
   @override
@@ -27,37 +27,37 @@ class StudentProfile extends StatelessWidget {
             // Верхняя часть профиля с аватаром и именем
             Container(
               padding: const EdgeInsets.all(24),
-              color: Colors.blue.shade700,
+              // color: Colors.blue.shade700,
               child: Column(
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.white,
+                    // backgroundColor: Colors.white,
                     child: Icon(Icons.person, size: 60, color: Colors.blue.shade700),
                     // Можно использовать NetworkImage для аватара пользователя
                     // backgroundImage: NetworkImage('URL_ВАШЕГО_АВАТАРА'),
                   ),
                   const SizedBox(height: 15),
                   const Text(
-                    'Иван Смирнов', // Имя студента
+                    'Yernar Almasuly',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      // color: Colors.white,
                     ),
                   ),
                   const Text(
-                    'Университет "Технологии будущего"', // Учебное заведение
+                    'Almaty Polytechnic College', // Учебное заведение
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white70,
+                      // color: Colors.white70,
                     ),
                   ),
                   const SizedBox(height: 10),
                   ActionChip(
                     label: const Text('Редактировать профиль', style: TextStyle(color: AppColors.deepPurple)),
                     avatar: Icon(Icons.edit, color: Colors.blue.shade700, size: 18),
-                    backgroundColor: Colors.white,
+                    // backgroundColor: Colors.white,
                     onPressed: () {
                       // TODO: Переход на экран редактирования профиля
                       print('Редактирование профиля студента');
@@ -147,8 +147,9 @@ class StudentProfile extends StatelessWidget {
                   Center(
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        // TODO: Реализовать выход из аккаунта
-                        print('Выход из аккаунта студента');
+                        
+                        currentUserRole.value = UserRole.employer;
+
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.redAccent,

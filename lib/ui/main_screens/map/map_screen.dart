@@ -215,308 +215,314 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       backgroundColor: AppColors.white,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return IntrinsicHeight(
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(height: 5),
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              place.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: Icon(HugeIcons.strokeRoundedCancel01),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        place.type,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.deepPurple
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: SingleChildScrollView(
+            child: IntrinsicHeight(
+              child: SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 5),
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(50),
                         ),
                       ),
-
-                      const SizedBox(height: 4,),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(HugeIcons.strokeRoundedLocation01),
-                          const SizedBox(width: 5,),
-                          Expanded(
-                            child: Text(
-                              place.address,
-                              style: TextStyle(
-                                fontSize: 16
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  place.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(HugeIcons.strokeRoundedCancel01),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            place.type,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.deepPurple
+                            ),
+                          ),
+            
+                          const SizedBox(height: 4,),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(HugeIcons.strokeRoundedLocation01),
+                              const SizedBox(width: 5,),
+                              Expanded(
+                                child: Text(
+                                  place.address,
+                                  style: TextStyle(
+                                    fontSize: 16
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+            
+                          const SizedBox(height: 15,),
+            
+                          place.imageUrl.isNotEmpty 
+                          ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Фотографии (${place.imageUrl.length})',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  Icon(HugeIcons.strokeRoundedCamera01, color: AppColors.deepPurple,)
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 200,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: place.imageUrl.length,
+                                  itemBuilder:(context, index) {
+                                    final image = place.imageUrl[index];
+                                    return Container(
+                                      width: 180,
+                                      margin: const EdgeInsets.only(right: 10),
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          Image.network(
+                                            image, 
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child, loadingProgress) {
+                                              if (loadingProgress == null) return child;
+                                                return Center(child: CircularProgressIndicator(color: AppColors.blue));
+                                              },
+                                              errorBuilder:(context, error, stackTrace) => Icon(HugeIcons.strokeRoundedRssError, size: 40,),
+                                          ),
+            
+                                          Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: (){
+                                                openFullscreenImage(context, image);
+                                              },
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                )
+                              ),
+                            ],
+                          ) 
+                          
+                          : Container(
+                            height: 150,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              color: AppColors.silver,
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.camera_alt_rounded,
+                                    color: AppColors.grey,
+                                    size: 40,
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  Text(
+                                    'Фотографии нету',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.grey
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 15,),
-
-                      place.imageUrl.isNotEmpty 
-                      ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                          const SizedBox(height: 20),
+                          
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Фотографии (${place.imageUrl.length})',
+                                'Ваканции (${place.vacancies.length})',
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(width: 10,),
-                              Icon(HugeIcons.strokeRoundedCamera01, color: AppColors.deepPurple,)
+                              Icon(
+                                HugeIcons.strokeRoundedWork, 
+                                color: AppColors.deepPurple,
+                              ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 200,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: place.imageUrl.length,
-                              itemBuilder:(context, index) {
-                                final image = place.imageUrl[index];
-                                return Container(
-                                  width: 180,
-                                  margin: const EdgeInsets.only(right: 10),
-                                  clipBehavior: Clip.hardEdge,
+            
+                          SizedBox(height: 10,),
+                          place.vacancies.isNotEmpty ? 
+                          Column(
+                            
+                            children: List.generate(place.vacancies.length, (index) {
+                              final vacancy = place.vacancies[index];
+            
+                              return IntrinsicHeight(
+                                child: Container(
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.only(bottom: 10),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)
+                                    color: Colors.white,
+                                    border: Border.all(color: AppColors.borderColor),
+                                    borderRadius: BorderRadius.circular(14)
                                   ),
-                                  child: Stack(
-                                    fit: StackFit.expand,
+            
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Image.network(
-                                        image, 
-                                        fit: BoxFit.cover,
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) return child;
-                                            return Center(child: CircularProgressIndicator(color: AppColors.blue));
-                                          },
-                                          errorBuilder:(context, error, stackTrace) => Icon(HugeIcons.strokeRoundedRssError, size: 40,),
-                                      ),
-
-                                      Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: (){
-                                            openFullscreenImage(context, image);
-                                          },
-                                          borderRadius: BorderRadius.circular(10),
+                                      Text(
+                                        vacancy.title,
+                                        style: TextStyle(
+                                          fontSize: 21,
+                                          fontWeight: FontWeight.w600
                                         ),
                                       ),
+                                      Text(
+                                        '${vacancy.salary} 〒',
+                                        style: TextStyle(
+                                          fontSize: 18
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5,),
+                                      Text(
+                                        vacancy.description,
+                                        style: TextStyle(
+                                          fontSize: 16
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Почта: ',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600
+                                            ),
+                                          ),
+            
+                                          Text(
+                                            vacancy.contacts.email,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          
+                                        ],
+                                      ),
+                         
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Номер телефона: ',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600
+                                            ),
+                                          ),
+                                          Text(
+                                            vacancy.contacts.phone,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                            ),
+                                          )
+                                        ],
+                                      )
                                     ],
                                   ),
-                                );
-                              },
-                            )
-                          ),
-                        ],
-                      ) 
-                      
-                      : Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          color: AppColors.silver,
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.camera_alt_rounded,
-                                color: AppColors.grey,
-                                size: 40,
-                              ),
-                              const SizedBox(height: 5,),
-                              Text(
-                                'Фотографии нету',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.grey
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Ваканции (${place.vacancies.length})',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
+                              );
+                            }),
+                          )
+                          
+                          
+                          
+                          : Container(
+                            height: 150,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              color: AppColors.silver,
+                              borderRadius: BorderRadius.circular(10)
                             ),
-                          ),
-                          const SizedBox(width: 10,),
-                          Icon(
-                            HugeIcons.strokeRoundedWork, 
-                            color: AppColors.deepPurple,
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 10,),
-                      place.vacancies.isNotEmpty ? 
-                      Column(
-                        
-                        children: List.generate(place.vacancies.length, (index) {
-                          final vacancy = place.vacancies[index];
-
-                          return IntrinsicHeight(
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: AppColors.borderColor),
-                                borderRadius: BorderRadius.circular(14)
-                              ),
-
-                              padding: const EdgeInsets.all(16),
+                            child: Center(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    vacancy.title,
-                                    style: TextStyle(
-                                      fontSize: 21,
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                  ),
-                                  Text(
-                                    '${vacancy.salary} 〒',
-                                    style: TextStyle(
-                                      fontSize: 18
-                                    ),
+                                  Icon(
+                                    Icons.work_off_rounded,
+                                    color: AppColors.grey,
+                                    size: 40,
                                   ),
                                   const SizedBox(height: 5,),
                                   Text(
-                                    vacancy.description,
+                                    'Ваканции нету',
                                     style: TextStyle(
-                                      fontSize: 16
+                                      fontSize: 14,
+                                      color: AppColors.grey
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Почта: ',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600
-                                        ),
-                                      ),
-
-                                      Text(
-                                        vacancy.contacts.email,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      
-                                    ],
-                                  ),
-                     
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Номер телефона: ',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600
-                                        ),
-                                      ),
-                                      Text(
-                                        vacancy.contacts.phone,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      )
-                                    ],
                                   )
                                 ],
                               ),
                             ),
-                          );
-                        }),
-                      )
-                      
-                      
-                      
-                      : Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          color: AppColors.silver,
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.work_off_rounded,
-                                color: AppColors.grey,
-                                size: 40,
-                              ),
-                              const SizedBox(height: 5,),
-                              Text(
-                                'Ваканции нету',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.grey
-                                ),
-                              )
-                            ],
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );

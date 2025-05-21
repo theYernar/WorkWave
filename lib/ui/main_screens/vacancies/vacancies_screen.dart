@@ -5,9 +5,19 @@ import 'package:workwave/core/route/app_routes.dart';
 import 'package:workwave/core/theme/colors/app_colors.dart';
 import 'package:workwave/data/places_data.dart';
 
-class VacanciesScreen extends StatelessWidget {
+// ValueNotifier<bool> VacancyResponse = ValueNotifier<bool>(false);
+
+
+class VacanciesScreen extends StatefulWidget {
   const VacanciesScreen({super.key});
 
+  @override
+  State<VacanciesScreen> createState() => _VacanciesScreenState();
+}
+
+class _VacanciesScreenState extends State<VacanciesScreen> {
+
+  final Map<String, bool> _vacancyResponseStatus = {};
   @override
   Widget build(BuildContext context) {
 
@@ -28,7 +38,19 @@ class VacanciesScreen extends StatelessWidget {
                 Column(
                   children: List.generate(place.vacancies.length, (index) {
                     final vacancy = place.vacancies[index];
-          
+                    
+
+
+                    if (!_vacancyResponseStatus.containsKey(vacancy.id.toString())) { // Предполагаем, что у Vacancy есть уникальный 'id'
+                        _vacancyResponseStatus[vacancy.id.toString()] = false; // Убедитесь, что vacancy.id не null
+                    }
+                    
+                    // Используем ValueNotifier для каждой вакансии
+                    // Это НЕ глобальный, а локальный ValueNotifier для конкретной вакансии
+                    final vacancyNotifier = ValueNotifier<bool>(_vacancyResponseStatus[vacancy.id.toString()]!);
+
+
+
                     return IntrinsicHeight(
                       child: Container(
                         width: double.infinity,
@@ -79,77 +101,125 @@ class VacanciesScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 14,),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: IntrinsicHeight(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.deepPurple,
-                                        borderRadius: BorderRadius.circular(14)
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Center(
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 13),
-                                              child: Text(
-                                                'Откликнуться',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white
+                            ValueListenableBuilder(
+                              valueListenable: vacancyNotifier,
+                              builder: (_,value,__) {
+                                return Row(
+                                  children: [
+                                    Expanded(
+                                      child: IntrinsicHeight(
+                                        child: value ? 
+                                          Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.silver,
+                                            borderRadius: BorderRadius.circular(14)
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 13),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      const SizedBox(width: 10,),
+                                                      Icon(
+                                                        Icons.error_outline_rounded,
+                                                        color: AppColors.deepPurple,
+                                                      ),
+                                                      const SizedBox(width: 10,),
+                                                      Text(
+                                                        'Вы откликнулись',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: AppColors.deepPurple
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                              Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  onTap: (){},
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: (){},
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  )
-                                ),
-                                const SizedBox(width: 10,),
-                                Expanded(
-                                  child: IntrinsicHeight(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: AppColors.deepPurple),
-                                        borderRadius: BorderRadius.circular(14)
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Center(
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 14),
-                                              child: Text(
-                                                'Показать на карте',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: AppColors.deepPurple
+                                        )
+                                        
+                                         : Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.deepPurple,
+                                            borderRadius: BorderRadius.circular(14)
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 13),
+                                                  child: Text(
+                                                    'Откликнуться',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                              Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  onTap: (){
+                                                    vacancyNotifier.value = true;
+                                                  },
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: (){
-                                          
-                                                context.go(AppRoutes.map, extra: place);
-                                              },
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  )
-                                ),
-                              ],
+                                        )
+                                      )
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    IntrinsicHeight(
+                                      child: IntrinsicWidth(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: AppColors.deepPurple),
+                                            borderRadius: BorderRadius.circular(14)
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+                                                  child: Text(
+                                                    'Показать на карте',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: AppColors.deepPurple
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  onTap: (){
+                                              
+                                                    context.go(AppRoutes.map, extra: place);
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ),
+                                  ],
+                                );
+                              }
                             )
                             
                           ],
